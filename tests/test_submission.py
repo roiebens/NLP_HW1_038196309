@@ -19,3 +19,6 @@ def test_pdf():
     for id_el in pdf_path.name[:-4].split("_"):
         print("id:",id_el)
         assert len(id_el)==9,"ID number is in a wrong format"
+def test_npy():
+    path = pathlib.Path("saved_params_40000.npy")
+    assert path.exists()
