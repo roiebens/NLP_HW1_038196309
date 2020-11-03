@@ -7,7 +7,6 @@ import pytest
 
 
 def test_pdf():
-    #make sure this file runs in the same folder as mnist.py and the answers pdf
     #make sure to title the pdf file name as id1_id2_id3.pdf i.e: 123456789_123456789_123456789.pdf
     pdf_list = list(glob.glob("*.pdf"))
     assert len(pdf_list)<2,"Only submit a single pdf file"
@@ -19,6 +18,7 @@ def test_pdf():
     for id_el in pdf_path.name[:-4].split("_"):
         print("id:",id_el)
         assert len(id_el)==9,"ID number is in a wrong format"
+        
 def test_npy():
     path = pathlib.Path("saved_params_40000.npy")
     assert path.exists()
