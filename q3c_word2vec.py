@@ -38,16 +38,14 @@ def naive_softmax_loss_and_gradient(
     """
 
     ### YOUR CODE HERE
-    out_vec = outside_vectors[outside_word_idx, :]
-    dot_prod = np.dot(outside_vectors, center_word_vec)
-    v = outside_vectors.shape[0]
-
-    y_hat = softmax(dot_prod)
-    y = np.zeros(v)
+    outsideWord = outside_vectors[outside_word_idx, :]
+    y_hat = softmax(np.dot(outside_vectors, center_word_vec))
+    # one hot vector for the word
+    y = np.zeros(outside_vectors.shape[0])
     y[outside_word_idx] = 1
 
     loss = - np.log(y_hat[outside_word_idx])
-    grad_center_vec = np.dot(outside_vectors.T, y_hat) - out_vec
+    grad_center_vec = np.dot(outside_vectors.T, y_hat) - outsideWord
     grad_outside_vecs = np.outer(y_hat - y, center_word_vec)
     ### END YOUR CODE
 
@@ -86,21 +84,21 @@ def neg_sampling_loss_and_gradient(
     for i, idx in enumerate(neg_indexes):
         counter[i] = neg_sample_word_indices.count(idx)
 
-    out_vec = outside_vectors[outside_word_idx]
+    outsideWord = outside_vectors[outside_word_idx, :]
     negative_vecs = outside_vectors[neg_sample_word_indices]
-    dot_prod = np.dot(out_vec, center_word_vec)
-    negative_dot_prod = np.dot(negative_vecs, center_word_vec)
+    dot_prod = np.dot(outsideWord, center_word_vec)
+    neg_dot_prod = np.dot(negative_vecs, center_word_vec)
     grad_outside_vecs = np.zeros_like(outside_vectors)
 
-    loss = -np.log(sigmoid(dot_prod)) - np.sum(np.log(sigmoid(-1 * negative_dot_prod)))
-    grad_center_vec = - out_vec * (1 - sigmoid(dot_prod)) + np.dot(negative_vecs.T, (1 - sigmoid(-1 * negative_dot_prod)))
+    loss = -np.log(sigmoid(dot_prod)) - np.sum(np.log(sigmoid(-1 * neg_dot_prod)))
+    grad_center_vec = - outsideWord * (1 - sigmoid(dot_prod)) + np.dot(negative_vecs.T, (1 - sigmoid(-1 * neg_dot_prod)))
 
     grad_outside_vecs[outside_word_idx, :] = center_word_vec * (sigmoid(dot_prod) - 1)
 
     negative_vecs = outside_vectors[neg_indexes]
-    negative_dot_prod = np.dot(negative_vecs, center_word_vec)
+    neg_dot_prod = np.dot(negative_vecs, center_word_vec)
 
-    grad_outside_vecs[neg_indexes, :] = np.outer(1 - sigmoid(-1 * negative_dot_prod),  center_word_vec)
+    grad_outside_vecs[neg_indexes, :] = np.outer(1 - sigmoid(-1 * neg_dot_prod),  center_word_vec)
     grad_outside_vecs[neg_indexes, :] = (grad_outside_vecs[neg_indexes, :].T * counter).T
     ### END YOUR CODE
 
