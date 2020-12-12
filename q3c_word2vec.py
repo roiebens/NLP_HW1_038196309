@@ -140,10 +140,6 @@ def skipgram(current_center_word, outside_words, word2ind,
     grad_outside_vectors = np.zeros(outside_vectors.shape)
 
     ### YOUR CODE HERE
-    loss = 0.0
-    grad_center_vecs = np.zeros(center_word_vectors.shape)
-    grad_outside_vectors = np.zeros(outside_vectors.shape)
-
     c = word2ind[current_center_word]
     out_vec = center_word_vectors[c, :]
 
